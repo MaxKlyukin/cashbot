@@ -5,6 +5,8 @@ import com.charleskorn.kaml.Yaml
 import com.charleskorn.kaml.YamlConfiguration
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.modules.EmptySerializersModule
+import kotlinx.serialization.modules.SerializersModule
 import java.io.File
 
 class YamlFile(fileName: String) {
@@ -24,9 +26,17 @@ class YamlFile(fileName: String) {
     }
 
     companion object {
-        val yaml = Yaml(configuration = YamlConfiguration(
+        private var yaml = makeYaml()
+
+        private fun makeYaml(serializersModule: SerializersModule = EmptySerializersModule): Yaml {
+            return Yaml(configuration = YamlConfiguration(
                 polymorphismStyle = PolymorphismStyle.Property,
                 polymorphismPropertyName = "type"
-        ))
+            ), serializersModule = serializersModule)
+        }
+
+        fun replaceModule(serializersModule: SerializersModule) {
+            yaml = makeYaml(serializersModule)
+        }
     }
 }

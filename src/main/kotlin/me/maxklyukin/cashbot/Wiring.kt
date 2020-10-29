@@ -8,9 +8,7 @@ import me.maxklyukin.cashbot.message.MessageHandlerFactory
 import me.maxklyukin.cashbot.task.TaskRunnerFactory
 import me.maxklyukin.cashbot.yaml.*
 
-object Wiring {
-
-    val config = loadConfig("config.yaml")
+class Wiring(val config: Config) {
 
     val dataStoreFactory = YamlDataStoreFactory(config.data_dir)
 
@@ -86,8 +84,4 @@ object Wiring {
             CommandInfo("remove_command", "remove_command (?<id>\\w+)", "remove_command(req('id'))"),
             CommandInfo("set_command", "set_command (?<id>\\w+) '(?<triggers>[^']+)' (?<command>.+)", "set_command(req('id'), req('command'))"),
     )
-
-    private fun loadConfig(fileName: String): Config {
-        return YamlFile(fileName).read(Config.serializer())
-    }
 }

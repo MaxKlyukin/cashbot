@@ -6,17 +6,19 @@ import me.maxklyukin.cashbot.message.Message
 import me.maxklyukin.cashbot.message.Response
 import me.maxklyukin.cashbot.task.TaskRunner
 import me.maxklyukin.cashbot.translation.Translator
+import me.maxklyukin.cashbot.yaml.YamlFile
+import kotlinx.serialization.modules.*
 
-class App {
+class App(private val wiring: Wiring) {
 
     fun run() {
         runBlocking {
             val messages = Channel<Message>()
             val responses = Channel<Response>()
 
-            val handler = Wiring.handlerFactory.make(messages, responses)
-            val client = Wiring.clientFactory.getClient()
-            val taskRunner = Wiring.taskRunnerFactory.make(handler)
+            val handler = wiring.handlerFactory.make(messages, responses)
+            val client = wiring.clientFactory.getClient()
+            val taskRunner = wiring.taskRunnerFactory.make(handler)
 
             initTranslator()
             initFunctions()
@@ -34,12 +36,12 @@ class App {
     }
 
     private fun initTranslator() {
-        Translator.setDefault(Translator(Wiring.translationLoader, Wiring.config.lang))
+        Translator.setDefault(Translator(wiring.translationLoader, wiring.config.lang))
     }
 
     private fun initFunctions() {
-        for (function in Wiring.functions) {
-            Wiring.functionRepo.add(function)
+        for (function in wiring.functions) {
+            wiring.functionRepo.add(function)
         }
     }
 
@@ -49,24 +51,38 @@ class App {
     }
 
     private fun addSystemCommands() {
-        for (info in Wiring.systemCommands) {
-            Wiring.commandUpdater.addSystemCommand(info)
+        for (info in wiring.systemCommands) {
+            wiring.commandUpdater.addSystemCommand(info)
         }
     }
 
     private fun addUserCommands() {
-        for (info in Wiring.commandLoader.load()) {
-            Wiring.commandUpdater.addUserCommand(info)
+        for (info in wiring.commandLoader.load()) {
+            wiring.commandUpdater.addUserCommand(info)
         }
     }
 
     private fun initTasks(taskRunner: TaskRunner) {
-        for (task in Wiring.taskRepository.getTasks()) {
+        for (task in wiring.taskRepository.getTasks()) {
             taskRunner.add(task)
         }
     }
 }
 
 fun main() {
-    App().run()
+    val config = loadConfig("config.yaml")
+    val wiring = Wiring(config)
+
+    App(wiring).run()
+}
+
+private fun loadConfig(fileName: String): Config {
+    YamlFile.replaceModule(makeConfigSerializersModule())
+
+    return YamlFile(fileName).read(Config.serializer())
+}
+
+fun makeConfigSerializersModule(): SerializersModule {
+    return SerializersModule {
+    }
 }

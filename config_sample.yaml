@@ -6,3 +6,4 @@ data_dir: "data"
 client:
   type: slack
   token: xxxx-xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx
+custom:
