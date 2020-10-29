@@ -1,0 +1,8 @@
+translation_file: "translations.yaml"
+lang: "en"
+command_file: "commands.yaml"
+task_file: "tasks.yaml"
+data_dir: "data"
+client:
+  type: slack
+  token: xxxx-xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx

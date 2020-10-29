@@ -1,0 +1,106 @@
+translations:
+  update_command:
+    - lang: en
+      translation: "updates command by id"
+    - lang: ru
+      translation: "обновляет команду по id"
+  function_not_found:
+    - lang: en
+      translation: "function %name% not found"
+    - lang: ru
+      translation: "функция %name% не найдена"
+  expression_execution_fail:
+    - lang: en
+      translation: "execution of expression failed"
+    - lang: ru
+      translation: "выражение не удалось выполнить"
+  calculates_math_expression:
+    - lang: en
+      translation: "calculates math expression"
+    - lang: ru
+      translation: "считает математическое выражение"
+  no_arguments:
+    - lang: en
+      translation: "no argument has been passed"
+    - lang: ru
+      translation: "не передано ни одного аргумента"
+  chooses_random_argument:
+    - lang: en
+      translation: "chooses random argument"
+    - lang: ru
+      translation: "выбирает случайный аргумент"
+  concatenates_arguments_into_a_string:
+    - lang: en
+      translation: "concatenates arguments into a string"
+    - lang: ru
+      translation: "конкатенирует аргументы в одну строку"
+  command_not_found:
+    - lang: en
+      translation: "command is not found"
+    - lang: ru
+      translation: "команда не найдена"
+  finds_a_command:
+    - lang: en
+      translation: "finds a command by id or triggers"
+    - lang: ru
+      translation: "находит команду по id или тригерам"
+  function_doesnt_have_argument:
+    - lang: en
+      translation: "function doesn't have %argument% argument"
+    - lang: ru
+      translation: "функция не имеет аргумента %argument%"
+  argument_hasnt_been_passed:
+    - lang: en
+      translation: "%argument% argument hasn't been passed"
+    - lang: ru
+      translation: "аргумент %argument% не был передан"
+  argument_cant_be_casted:
+    - lang: en
+      translation: "%argument% argument with the type %actual% can not be casted to %expected% type"
+    - lang: ru
+      translation: "аргумент %argument% с типом %actual% не может быть приведен к типу %expected%"
+  prints_list_of_commands:
+    - lang: en
+      translation: "prints the list of commands"
+    - lang: ru
+      translation: "выводит список команд"
+  prints_list_of_functions:
+    - lang: en
+      translation: "prints the list of functions"
+    - lang: ru
+      translation: "выводит список функций"
+  prints_random_number:
+    - lang: en
+      translation: "prints random number"
+    - lang: ru
+      translation: "выводит случайное число"
+  command_was_removed:
+    - lang: en
+      translation: "command *%command%* was removed"
+    - lang: ru
+      translation: "команда *%command%* была удалена"
+  removes_command:
+    - lang: en
+      translation: "removes command by id"
+    - lang: ru
+      translation: "удаляет команду по id"
+  repeats_string:
+    - lang: en
+      translation: "repeats a string specified number of times"
+    - lang: ru
+      translation: "повторяет строку указанное количество раз"
+  group_wasnt_matched:
+    - lang: en
+      translation: "%group% wasn't matched from request"
+    - lang: ru
+      translation: "%group% не был определен из запроса"
+  type_unknown:
+    - lang: en
+      translation: "%type% type is unknown"
+    - lang: ru
+      translation: "тип %type% не известен"
+  prints_matched_group:
+    - lang: en
+      translation: "prints matched group from request"
+    - lang: ru
+      translation: "выводит определенную группу из запроса"
