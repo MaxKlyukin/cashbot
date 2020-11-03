@@ -11,28 +11,26 @@ import kotlinx.serialization.modules.*
 
 class App(private val wiring: Wiring) {
 
-    fun run() {
-        runBlocking {
-            val messages = Channel<Message>()
-            val responses = Channel<Response>()
+    fun run() = runBlocking {
+        val messages = Channel<Message>()
+        val responses = Channel<Response>()
 
-            val handler = wiring.handlerFactory.make(messages, responses)
-            val client = wiring.clientFactory.getClient()
-            val taskRunner = wiring.taskRunnerFactory.make(handler)
+        val handler = wiring.handlerFactory.make(messages, responses)
+        val client = wiring.clientFactory.getClient()
+        val taskRunner = wiring.taskRunnerFactory.make(handler)
 
-            initTranslator()
-            initFunctions()
-            initCommands()
-            initTasks(taskRunner)
+        initTranslator()
+        initFunctions()
+        initCommands()
+        initTasks(taskRunner)
 
-            val handlerJob = handler.handleMessages()
-            val clientJob = client.communicate(messages, responses)
-            val taskJob = taskRunner.start()
+        val handlerJob = handler.handleMessages()
+        val clientJob = client.communicate(messages, responses)
+        val taskJob = taskRunner.start()
 
-            handlerJob.join()
-            clientJob.join()
-            taskJob.join()
-        }
+        handlerJob.join()
+        clientJob.join()
+        taskJob.join()
     }
 
     private fun initTranslator() {
@@ -84,5 +82,8 @@ private fun loadConfig(fileName: String): Config {
 
 fun makeConfigSerializersModule(): SerializersModule {
     return SerializersModule {
+        polymorphic(CustomConfig::class) {
+//            subclass(YourCustomConfig::class)
+        }
     }
 }

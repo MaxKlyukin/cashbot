@@ -119,6 +119,21 @@ class CalculatorTest {
     }
 
     @Test
+    fun itCanExponentiateFloatBase() {
+        assertCalculates("1.1156683467", "1.01^11")
+    }
+
+    @Test
+    fun itCanExponentiateFloatPowers() {
+        assertCalculates("185.6207484", "108^(1.1156683467)")
+    }
+
+    @Test
+    fun itCanExponentiateFloatPowers2() {
+        assertCalculates("185.6207484", "108^(1.01^11)")
+    }
+
+    @Test
     fun itRespectsOperationOrderWithExponentiation() {
         assertCalculates("684.135743256", "420*1.05^10")
     }
@@ -141,7 +156,7 @@ class CalculatorTest {
     private fun assertCalculates(expected: String, expressionString: String) {
         val result = calc.calculate(expressionString)
 
-        assertTrue(BigDecimal(expected).compareTo(result) == 0, "expected:<$expected> but was:<$result>")
+        assertTrue(BigDecimal(expected).compareTo(result) == 0, "expected:<$expected> but was:<${result.stripTrailingZeros().toPlainString()}>")
     }
 
     private fun assertFails(expectedMessage: String, expressionString: String) {

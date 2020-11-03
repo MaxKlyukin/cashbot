@@ -110,6 +110,8 @@ class SlackClient(
 
     companion object {
         const val MAX_RETRIES = 10
+
+        internal val processContext = newSingleThreadContext("slack message encoder")
     }
 }
 
@@ -207,15 +209,13 @@ class SlackClientHandler(
         outgoing.send(Frame.Text(responseString))
     }
 
-    private val processContext = newSingleThreadContext("slack message encoder")
-
-    private suspend fun encodeOutgoing(outgoing: SlackOutgoing): String = runInterruptible(processContext) {
+    private suspend fun encodeOutgoing(outgoing: SlackOutgoing): String = runInterruptible(SlackClient.processContext) {
         val mapper = jacksonObjectMapper()
 
         mapper.writeValueAsString(outgoing)
     }
 
-    private suspend fun decodeIncoming(incoming: String): SlackIncomingMessage = runInterruptible(processContext) {
+    private suspend fun decodeIncoming(incoming: String): SlackIncomingMessage = runInterruptible(SlackClient.processContext) {
         val mapper = jacksonObjectMapper()
 
         mapper.readValue(incoming)
