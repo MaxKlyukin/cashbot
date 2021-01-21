@@ -13,6 +13,6 @@ object ChooseFunction: Function() {
             throw ExecutionException(t("no_arguments"))
         }
 
-        return context.arguments[Random.nextInt(context.arguments.size - 1)]
+        return context.arguments[Random.nextInt(context.arguments.size)]
     }
 }
