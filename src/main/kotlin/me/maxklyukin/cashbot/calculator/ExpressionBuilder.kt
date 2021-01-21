@@ -8,6 +8,7 @@ import kotlin.reflect.KClass
 class ExpressionBuilder(private val tokens: List<ExpressionToken>) {
     private var rootExpression: Expression? = null
     private var currentOperation: Operation? = null
+    private var negateNext: Boolean = false
 
     fun build(): Expression? {
         rootExpression = null
@@ -43,14 +44,16 @@ class ExpressionBuilder(private val tokens: List<ExpressionToken>) {
     private fun buildNonOperation(token: ExpressionToken, expression: Expression) {
         when (val root = rootExpression) {
             null -> {
-                rootExpression = expression
+                rootExpression = if(negateNext) Negative(expression) else expression
+                negateNext = false
                 return
             }
             is Group -> throw expectException(token::class, root::class)
-            is Number -> throw throw expectException(token::class, root::class)
+            is Number -> throw expectException(token::class, root::class)
             is Negative -> {
-                if (root.value != null) throw expectException(token::class, root.value!!::class)
+                if (root.value != null || negateNext) throw expectException(token::class, Subtraction::class)
                 rootExpression = Negative(expression)
+                negateNext = false
                 return
             }
         }
@@ -61,7 +64,7 @@ class ExpressionBuilder(private val tokens: List<ExpressionToken>) {
                 if (current.right != null) {
                     throw expectException(token::class, current.right!!::class)
                 }
-                current.right = expression
+                current.right = if(negateNext) Negative(expression) else expression
             }
         }
     }
@@ -69,19 +72,20 @@ class ExpressionBuilder(private val tokens: List<ExpressionToken>) {
     private fun unknownException() = CalculationException("Something went wrong")
 
     private fun buildOperation(operationToken: ExpressionToken.Operation) {
-        val root = rootExpression
-
-        if (root == null) {
-            rootExpression = when (operationToken) {
-                ExpressionToken.Operation.Addition -> null
-                ExpressionToken.Operation.Subtraction -> Negative()
-                else -> throw expectException(operationToken::class)
-            }
-
-            return
+        if (negateNext) {
+            throw expectException(operationToken::class, Subtraction::class)
         }
 
-        return when (root) {
+        return when (val root = rootExpression) {
+            null -> {
+                when {
+                    (operationToken is ExpressionToken.Operation.Addition && !negateNext) -> {}
+                    operationToken is ExpressionToken.Operation.Subtraction -> {
+                        negateNext = true
+                    }
+                    else -> throw expectException(operationToken::class)
+                }
+            }
             is Number -> {
                 currentOperation = makeOperation(operationToken, root)
                 rootExpression = currentOperation
@@ -92,7 +96,13 @@ class ExpressionBuilder(private val tokens: List<ExpressionToken>) {
             }
             is Operation -> {
                 when {
-                    root.right == null -> throw throw expectException(operationToken::class, root::class)
+                    root.right == null -> {
+                        if (operationToken is ExpressionToken.Operation.Subtraction) {
+                            negateNext = true
+                        } else {
+                            throw expectException(operationToken::class, root::class)
+                        }
+                    }
                     //2*4^3 = mul(2,4) -> mul(2,exp(4,))
                     ((operationToken is ExpressionToken.Operation.Exponentiation) && (
                             root is Addition

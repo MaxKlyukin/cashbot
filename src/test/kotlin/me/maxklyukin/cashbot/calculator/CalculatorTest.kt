@@ -153,6 +153,16 @@ class CalculatorTest {
         assertCalculates("32.8413269898", "(3^6 - (2/7 - 1.02))/22.22")
     }
 
+    @Test
+    fun itMultipliesByNegativeNumber() {
+        assertCalculates("-4", "2*-2")
+    }
+
+    @Test
+    fun itFailsForMultipleNegations() {
+        assertFails("Unexpected Subtraction after Subtraction", "2* - -7")
+    }
+
     private fun assertCalculates(expected: String, expressionString: String) {
         val result = calc.calculate(expressionString)
 
