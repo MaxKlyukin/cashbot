@@ -82,6 +82,6 @@ class Wiring(val config: Config) {
             CommandInfo("list_commands", "list_commands", "list_commands()"),
             CommandInfo("find_command", "find_command (?<search>.+)", "find_command(req('search'))"),
             CommandInfo("remove_command", "remove_command (?<id>\\w+)", "remove_command(req('id'))"),
-            CommandInfo("set_command", "set_command (?<id>\\w+) '(?<triggers>[^']+)' (?<command>.+)", "set_command(req('id'), req('command'))"),
+            CommandInfo("set_command", "set_command (?<id>\\w+) '(?<triggers>[^']+)' (?<command>.+)", "set_command(req('id'), req('triggers'), req('command'))"),
     )
 }
