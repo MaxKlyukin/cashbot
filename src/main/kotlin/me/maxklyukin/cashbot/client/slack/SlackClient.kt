@@ -111,7 +111,7 @@ class SlackClient(
     companion object {
         const val MAX_RETRIES = 10
 
-        internal val processContext = newSingleThreadContext("slack message encoder")
+        internal val processContext = newSingleThreadContext("SlackMessageEncoder")
     }
 }
 
