@@ -8,7 +8,7 @@ import me.maxklyukin.cashbot.task.TaskRunner
 import me.maxklyukin.cashbot.translation.Translator
 import me.maxklyukin.cashbot.yaml.YamlFile
 import kotlinx.serialization.modules.*
-import me.maxklyukin.cashbot.translation.DefaultTranslator
+import me.maxklyukin.cashbot.translation.TranslationListTranslator
 
 class App(private val wiring: Wiring) {
 
@@ -35,7 +35,8 @@ class App(private val wiring: Wiring) {
     }
 
     private fun initTranslator() {
-        Translator.setDefault(DefaultTranslator(wiring.translationLoader, wiring.config.lang))
+        val translations = wiring.translationLoader.load()
+        Translator.setDefault(TranslationListTranslator(translations, wiring.config.lang))
     }
 
     private fun initFunctions() {

@@ -19,8 +19,7 @@ interface Translator {
     }
 }
 
-class DefaultTranslator(loader: TranslationLoader, private val lang: String): Translator {
-    private val translations = loader.load()
+class TranslationListTranslator(private val translations: Map<String, List<Translation>>, private val lang: String): Translator {
 
     override fun translate(id: String, vars: Map<String, String>): String {
         if (!translations.containsKey(id)) {
